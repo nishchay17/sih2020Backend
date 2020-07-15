@@ -17,7 +17,7 @@ const SchemeRouter = require("./routes/SchemeRouter");
 
 //Mongo DB connection:-
 const mongoose = require("mongoose");
-const url = process.env.process.env.PORT || "mongodb://localhost:27017/sih2";
+const url = process.env.MONGODB_URL || "mongodb://localhost:27017/sih2";
 const connect = mongoose.connect(url);
 connect.then(
   (db) => {
