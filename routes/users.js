@@ -65,11 +65,13 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
     res.json({
       success: true,
       authorId: req.user._id,
+      // username: req.user.username,
       token: token,
       status: "You are successfully logged in!",
     });
   else
     res.json({
+      // username: req.user.username,
       success: true,
       token: token,
       status: "You are successfully logged in!",

@@ -9,11 +9,12 @@ const passport = require("passport");
 const authenticate = require("./authenticate");
 const config = require("./config");
 const cors = require("cors");
-
+//"C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe" --dbpath="d:\project\nodejsCoursera2\mongodb\data"
 //router require
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const SchemeRouter = require("./routes/SchemeRouter");
+const ApplyRouter = require("./routes/ApplyRouter");
 
 //Mongo DB connection:-
 const mongoose = require("mongoose");
@@ -57,6 +58,7 @@ app.use(passport.session());
 app.use("/", indexRouter);
 app.use("/schemes", SchemeRouter);
 app.use("/users", usersRouter);
+app.use("/apply", ApplyRouter);
 
 const auth = (req, res, next) => {
   if (!req.user) {
