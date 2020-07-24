@@ -59,18 +59,6 @@ SchemeRouter.get(
   }
 );
 
-SchemeRouter.post(
-  "/apply/:schemeId",
-  authenticate.verifyUser,
-  (req, res, next) => {
-    Scheme.findByIdAndUpdate(
-      req.params.schemeId,
-      { $inc: { inProcess: 1 } },
-      { new: true }
-    ).then(res.redirect("/"));
-  }
-);
-
 SchemeRouter.route("/:schemeId")
   .get((req, res, next) => {
     Scheme.find({ _id: req.params.schemeId })
