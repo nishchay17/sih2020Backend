@@ -57,7 +57,7 @@ ApplyRouter.route("/").get(authenticate.verifyUser, (req, res, next) => {
     .catch((err) => next(err));
 });
 
-ApplyRouter.route("/:id").get((req, res, next) => {
+ApplyRouter.route("/:id").get(authenticate.verifyUser, (req, res, next) => {
   const schemeId = req.params.id;
   const userId = req.user._id;
   Applicatio.create({ schemeId, userId })
