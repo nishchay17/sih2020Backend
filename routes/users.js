@@ -74,6 +74,7 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
       // username: req.user.username,
       success: true,
       token: token,
+      id2: req.user._id,
       status: "You are successfully logged in!",
     });
 });
