@@ -17,6 +17,10 @@ const ApplicationSchema = new Schema(
       require: true,
       trim: true,
     },
+    author: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

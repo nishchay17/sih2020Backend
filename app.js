@@ -9,7 +9,7 @@ const passport = require("passport");
 const authenticate = require("./authenticate");
 const config = require("./config");
 const cors = require("cors");
-//"C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe" --dbpath="d:\project\nodejsCoursera2\mongodb\data"
+//"C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe" --dbpath="D:\project\sih2\mongodb\data"
 //router require
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
