@@ -3,6 +3,7 @@ const authenticate = require("../authenticate");
 const Scheme = require("../models/Scheme");
 const Applicatio = require("../models/Application");
 const bodyParser = require("body-parser");
+const { application } = require("express");
 const ApplyRouter = express.Router();
 ApplyRouter.use(bodyParser.json());
 
@@ -60,17 +61,67 @@ ApplyRouter.route("/").get(authenticate.verifyUser, (req, res, next) => {
 ApplyRouter.route("/:id").get(authenticate.verifyUser, (req, res, next) => {
   const schemeId = req.params.id;
   const userId = req.user._id;
-  Applicatio.create({ schemeId, userId })
-    .then(
-      (application) => {
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.json(application);
-      },
-      (err) => next(err)
-    )
+  Scheme.findById({ _id: schemeId })
+    .then((sch) => {
+      const author = sch.author;
+      Applicatio.create({ schemeId, userId, author })
+        .then(
+          (application) => {
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(application);
+          },
+          (err) => next(err)
+        )
+        .catch((err) => next(err));
+    })
     .catch((err) => next(err));
 });
+
+ApplyRouter.route("/review/:id")
+  .get(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    const id = req.params.id;
+    Applicatio.find({ author: id })
+      .then(
+        (applications) => {
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json");
+          res.json(applications);
+        },
+        (err) => next(err)
+      )
+      .catch((err) => next(err));
+  })
+  .post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    Applicatio.findByIdAndUpdate(
+      req.params.id,
+      { state: JSON.parse(req.body.state) },
+      { new: true },
+      (err, result) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send(result);
+        }
+      }
+    ).catch((err) => next(err));
+  });
+
+ApplyRouter.route("/application/:id").get(
+  authenticate.verifyUser,
+  (req, res, next) => {
+    Applicatio.find({ userId: req.params.id })
+      .then(
+        (applications) => {
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json");
+          res.json(applications);
+        },
+        (err) => next(err)
+      )
+      .catch((err) => next(err));
+  }
+);
 
 // SchemeRouter.post(
 //     "/apply/:schemeId",
