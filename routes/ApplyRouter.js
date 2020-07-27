@@ -114,6 +114,7 @@ ApplyRouter.route("/review/:id") //it's user id
 ApplyRouter.route("/application/:id").get(
   authenticate.verifyUser,
   (req, res, next) => {
+    console.log("hello");
     Applicatio.find({ userId: req.params.id })
       .then(
         (applications) => {
@@ -127,20 +128,18 @@ ApplyRouter.route("/application/:id").get(
   }
 );
 
-ApplyRouter.route("reviewone/:applicationId").get(
+//to get application by id, for admin
+ApplyRouter.route("/reviewone/:applicationId").get(
   authenticate.verifyUser,
   authenticate.verifyAdmin,
   (req, res, next) => {
-    Applicatio.find({ _id: req.params.applicationId })
-      .then(
-        (application) => {
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.json(application);
-        },
-        (err) => next(err)
-      )
-      .catch((err) => next(err));
+    console.log("hello");
+
+    const id = req.params.applicationId;
+    Applicatio.findById(id, (err, application) => {
+      if (err) next(err);
+      else res.json(application);
+    }).catch((err) => next(err));
   }
 );
 
