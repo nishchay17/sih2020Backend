@@ -80,7 +80,7 @@ ApplyRouter.route("/:id").get(authenticate.verifyUser, (req, res, next) => {
     .catch((err) => next(err));
 });
 
-// for admin, to get all applications for his schemes, and to update it
+// for admin, to get all applications for his schemes
 ApplyRouter.route("/review/:id") //it's user id
   .get(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     const id = req.params.id;
@@ -94,20 +94,6 @@ ApplyRouter.route("/review/:id") //it's user id
         (err) => next(err)
       )
       .catch((err) => next(err));
-  })
-  .post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
-    Applicatio.findByIdAndUpdate(
-      req.params.id,
-      { state: JSON.parse(req.body.state) },
-      { new: true },
-      (err, result) => {
-        if (err) {
-          res.send(err);
-        } else {
-          res.send(result);
-        }
-      }
-    ).catch((err) => next(err));
   });
 
 //return all applications of the user, id is id of user
@@ -127,17 +113,28 @@ ApplyRouter.route("/application/:id").get(
   }
 );
 
-//to get application by id, for admin
-ApplyRouter.route("/reviewone/:applicationId").get(
-  authenticate.verifyUser,
-  authenticate.verifyAdmin,
-  (req, res, next) => {
+//to get and update application by id, for admin
+ApplyRouter.route("/reviewone/:applicationId")
+  .get(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     const id = req.params.applicationId;
     Applicatio.findById(id, (err, application) => {
       if (err) next(err);
       else res.json(application);
     }).catch((err) => next(err));
-  }
-);
+  })
+  .post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    Applicatio.findByIdAndUpdate(
+      req.params.applicationId,
+      { state: JSON.parse(req.body.state) },
+      { new: true },
+      (err, result) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send(result);
+        }
+      }
+    ).catch((err) => next(err));
+  });
 
 module.exports = ApplyRouter;
