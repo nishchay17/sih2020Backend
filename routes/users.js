@@ -24,6 +24,24 @@ router.get(
   }
 );
 
+router.get(
+  "/:id",
+  authenticate.verifyUser,
+  authenticate.verifyAdmin,
+  (req, res, next) => {
+    User.find({ _id: req.params.id })
+      .then(
+        (user) => {
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json");
+          res.json(user);
+        },
+        (err) => next(err)
+      )
+      .catch((err) => next(err));
+  }
+);
+
 router.post("/signup", (req, res, next) => {
   User.register(
     new User({
