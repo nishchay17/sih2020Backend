@@ -7,6 +7,7 @@ const { application } = require("express");
 const ApplyRouter = express.Router();
 ApplyRouter.use(bodyParser.json());
 
+// to get all the schemes that a user could apply for
 ApplyRouter.route("/").get(authenticate.verifyUser, (req, res, next) => {
   let c = -1;
   if (req.user.caste === 1 || req.user.caste === 2) c = 3;
@@ -58,6 +59,7 @@ ApplyRouter.route("/").get(authenticate.verifyUser, (req, res, next) => {
     .catch((err) => next(err));
 });
 
+// for user to apply for a scheme of id => req.params._id
 ApplyRouter.route("/:id").get(authenticate.verifyUser, (req, res, next) => {
   const schemeId = req.params.id;
   const userId = req.user._id;
@@ -78,6 +80,7 @@ ApplyRouter.route("/:id").get(authenticate.verifyUser, (req, res, next) => {
     .catch((err) => next(err));
 });
 
+// for admin, to get all applications for his schemes, and to update it
 ApplyRouter.route("/review/:id") //it's user id
   .get(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     const id = req.params.id;
@@ -107,6 +110,7 @@ ApplyRouter.route("/review/:id") //it's user id
     ).catch((err) => next(err));
   });
 
+//return all applications of the user, id is id of user
 ApplyRouter.route("/application/:id").get(
   authenticate.verifyUser,
   (req, res, next) => {
@@ -123,16 +127,21 @@ ApplyRouter.route("/application/:id").get(
   }
 );
 
-// SchemeRouter.post(
-//     "/apply/:schemeId",
-//     authenticate.verifyUser,
-//     (req, res, next) => {
-//       Scheme.findByIdAndUpdate(
-//         req.params.schemeId,
-//         { $inc: { inProcess: 1 } },
-//         { new: true }
-//       ).then(res.redirect("/"));
-//     }
-//   );
+ApplyRouter.route("reviewone/:applicationId").get(
+  authenticate.verifyUser,
+  authenticate.verifyAdmin,
+  (req, res, next) => {
+    Applicatio.find({ _id: req.params.applicationId })
+      .then(
+        (application) => {
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json");
+          res.json(application);
+        },
+        (err) => next(err)
+      )
+      .catch((err) => next(err));
+  }
+);
 
 module.exports = ApplyRouter;
