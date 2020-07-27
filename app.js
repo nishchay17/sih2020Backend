@@ -19,7 +19,7 @@ const ApplyRouter = require("./routes/ApplyRouter");
 //Mongo DB connection:-
 const mongoose = require("mongoose");
 const url = process.env.MONGODB_URL || "mongodb://localhost:27017/sih2";
-const connect = mongoose.connect(url);
+const connect = mongoose.connect(url, { useFindAndModify: false });
 connect.then(
   (db) => {
     console.log("Connected correctly to server");
