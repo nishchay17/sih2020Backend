@@ -122,7 +122,7 @@ ApplyRouter.route("/reviewone/:applicationId")
       else res.json(application);
     }).catch((err) => next(err));
   })
-  .post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+  .put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Applicatio.findByIdAndUpdate(
       req.params.applicationId,
       { state: JSON.parse(req.body.state) },
