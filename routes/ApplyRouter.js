@@ -78,7 +78,7 @@ ApplyRouter.route("/:id").get(authenticate.verifyUser, (req, res, next) => {
     .catch((err) => next(err));
 });
 
-ApplyRouter.route("/review/:id")
+ApplyRouter.route("/review/:id") //it's user id
   .get(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     const id = req.params.id;
     Applicatio.find({ author: id })
